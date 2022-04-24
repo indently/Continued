@@ -12,6 +12,7 @@ struct ContentView: View {
         Text("I hope no one will read this!")
             .padding()
         // This is a comment
+        // Another test
     }
 }
 
