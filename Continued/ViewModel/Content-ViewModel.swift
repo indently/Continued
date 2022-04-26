@@ -13,6 +13,7 @@ import SwiftUI
 final class ViewModel: ObservableObject {
     @Published var selection: Tabs = .todo
     @Published var items: [Item] = [Item]()
+    @Published var toggleValue = true
     
     private var dc: DataController
     private var moc: NSManagedObjectContext
@@ -50,7 +51,9 @@ final class ViewModel: ObservableObject {
         switch tab {
         case .todo:
             newItems = items.filter { !$0.completed }
+            toggleValue = true
         case .completed:
+            toggleValue = false
             newItems = items.filter { $0.completed }
         }
 
@@ -64,20 +67,21 @@ final class ViewModel: ObservableObject {
         }
     }
     
-    func toggleCompleted(item: Item) {
+    func toggleCompleted(item: Item, toggleValue: Bool) {
         dc.toggleCompleted(item: item, context: moc)
         let currentItem = items.first { $0.id == item.id}!
         objectWillChange.send()
         
-        currentItem.completed = true
+        currentItem.completed = toggleValue
         currentItem.name = "Changed!"
         currentItem.date = Date()
         
         withAnimation {
-            items = filterItems(items: items, tab: .todo)
+            items = filterItems(items: items, tab: selection)
         }
         
     }
+    
     
     func addItem() {
         dc.addItem(context: moc)

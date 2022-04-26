@@ -24,7 +24,7 @@ struct ItemView: View {
             
         }
         .onTapGesture {
-            vm.toggleCompleted(item: item)
+            vm.toggleCompleted(item: item, toggleValue: vm.toggleValue)
         }
     }
 }
